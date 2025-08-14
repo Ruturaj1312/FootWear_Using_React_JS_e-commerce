@@ -1,14 +1,39 @@
 import React from "react";
 import { Link, Outlet, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 function Layout() {
   const nav = useNavigate();
 
-  function handleLogout() {
-    nav("/admin_login");
-    document.cookie = "name=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-    document.cookie = "value=; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
-  }
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You will be logged out of your account.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#6c757d",
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Cancel",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // logout logic
+        nav("/admin_login");
+        document.cookie =
+          "name=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        document.cookie =
+          "value=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+        Swal.fire({
+          icon: "success",
+          title: "Logged out!",
+          text: "You have been logged out successfully.",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+      }
+    });
+  };
 
   return (
     <div className="d-flex min-vh-100">
